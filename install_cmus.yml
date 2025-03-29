@@ -2,7 +2,36 @@
 - hosts: all
   become: true
   tasks:
-    - name: Installs cmus
+    - name: Installing Apache
       apt:
-        name: cmus
+        name: apache2
         state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install repository index
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Adding php support for Apache
+      apt:
+        name: libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Installing Apache
+      yum:
+        name: httpd
+        state: present
+      when: ansible_distribution == "Red-hat"
+
+    - name: Install repository index
+      yum:
+        update_cache: yes
+      when: ansible_distribution == "Red-hat"
+
+    - name: Adding php support for Apache
+      yum:
+        name: php
+        state: latest
+      when: ansible_distribution == "Red-hat"
