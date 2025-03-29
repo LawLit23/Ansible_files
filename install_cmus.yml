@@ -1,0 +1,8 @@
+---
+- host: all
+  become: true
+  tasks:
+    - name: Installs cmus
+      apt:
+        name: cmus
+        state: present
