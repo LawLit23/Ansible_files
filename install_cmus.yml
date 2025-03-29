@@ -2,9 +2,11 @@
 - hosts: all
   become: true
   tasks:
-    - name: Installing Apache
+    - name: Installing Apache & PHP support for Ubuntu
       apt:
-        name: apache2
+        name:
+          - apache2
+          - libapache2-mod-php
         state: present
       when: ansible_distribution == "Ubuntu"
 
@@ -13,25 +15,15 @@
         update_cache: yes
       when: ansible_distribution == "Ubuntu"
 
-    - name: Adding php support for Apache
-      apt:
-        name: libapache2-mod-php
-        state: latest
-      when: ansible_distribution == "Ubuntu"
-
-    - name: Installing Apache
+    - name: Installing Apache & PHP support for Red-Hat
       yum:
-        name: httpd
+        name:
+          - httpd
+          - php
         state: present
       when: ansible_distribution == "Red-hat"
 
     - name: Install repository index
       yum:
         update_cache: yes
-      when: ansible_distribution == "Red-hat"
-
-    - name: Adding php support for Apache
-      yum:
-        name: php
-        state: latest
       when: ansible_distribution == "Red-hat"
