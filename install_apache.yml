@@ -2,13 +2,27 @@
 - hosts: all
   become: true
   tasks:
+    - name: Install updates (Red-Hat)
+      dnf:
+        update_only: yes
+        update_cache: yes
+      when: ansible_distribution == "Red-Hat"
+
+    - name: install updates (Red-Hat)
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+- hosts: web_servers
+  become: true
+  tasks:
     - name: Installing Apache & PHP support and updating cache for Ubuntu servers
       apt:
         name:
           - apache2
           - libapache2-mod-php
         state: present
-        update_cache: yes
       when: ansible_distribution == "Ubuntu"
 
     - name: Installing Apache & PHP support and updating cache for Red-Hat servers
@@ -17,5 +31,4 @@
           - httpd
           - php
         state: present
-        update_cache: yes
       when: ansible_distribution == "Red-Hat"
