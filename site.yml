@@ -1,8 +1,9 @@
 ---
 - hosts: all
   become: true
-  tasks:
+  pre_tasks:
     - name: Install updates (RHEL)
+      tags: always
       dnf:
         name: "*"
         state: latest
@@ -19,6 +20,7 @@
   become: true
   tasks:
     - name: Installing Apache & PHP support for Ubuntu servers
+      tags: apache, apache2, Ubuntu
       apt:
         name:
           - apache2
@@ -27,6 +29,7 @@
       when: ansible_distribution == "Ubuntu"
 
     - name: Installing Apache & PHP support for Red-Hat servers
+      tags: apache, redhat, httpd
       yum:
         name:
           - httpd
@@ -38,6 +41,7 @@
   become: true
   tasks:
     - name: Install MariaDB package "RHEL"
+      tags: redhat, db, mariadb
       dnf:
         name:
           - mariadb
@@ -46,6 +50,7 @@
       when: ansible_distribution == "RedHat"
 
     - name: Install MariaDB package "Ubuntu"
+      tags: ubuntu, db, mariadb
       apt:
         name: mariadb-server
         state: latest
@@ -55,6 +60,7 @@
   become: true
   tasks:
     - name: Install Samba package
+      tags: samba
       package:
         name: samba
         state: latest
