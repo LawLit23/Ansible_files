@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Installing Apache & PHP support and updating cache for Ubuntu servers
+      apt:
+        name:
+          - apache2
+          - libapache2-mod-php
+        state: present
+        update_cache: yes
+
+    - name: Installing Apache & PHP support and updating cache for Red-Hat servers
+      yum:
+        name:
+          - httpd
+          - php
+        state: present
+        update_cache: yes

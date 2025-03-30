@@ -1,8 +1,7 @@
-34.229.75.6 apache_package=apache2 php_package=libapache2-mod-php
-35.171.23.1 apache_package=apache2 php_package=libapache2-mod-php
-34.229.216.217 apache_package=apache2 php_package=libapache2-mod-php
-34.239.129.47 apache_package=apache2 php_package=libapache2-mod-php
+3.95.201.77 apache_package=apache2 php_package=libapache2-mod-php
+54.243.1.5 apache_package=apache2 php_package=libapache2-mod-php
+34.228.167.36 apache_package=apache2 php_package=libapache2-mod-php
+18.234.128.148 apache_package=apache2 php_package=libapache2-mod-php
 
-
-54.90.224.93 ansible_user=ec2-user apache_package=httpd php_package=php
-44.203.121.151 ansible_user=ec2-user apache_package=httpd php_package=php
+54.204.84.161 ansible_user=ec2-user apache_package=httpd php_package=php
+54.166.15.171 ansible_user=ec2-user apache_package=httpd php_package=php
