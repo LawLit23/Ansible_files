@@ -1,7 +1,12 @@
-3.95.201.77 apache_package=apache2 php_package=libapache2-mod-php
-54.243.1.5 apache_package=apache2 php_package=libapache2-mod-php
-34.228.167.36 apache_package=apache2 php_package=libapache2-mod-php
-18.234.128.148 apache_package=apache2 php_package=libapache2-mod-php
+[webservers]
+54.89.31.112
+54.175.189.173
+18.212.28.160
 
-54.204.84.161 ansible_user=ec2-user apache_package=httpd php_package=php
-54.166.15.171 ansible_user=ec2-user apache_package=httpd php_package=php
+[db_servers]
+44.203.3.60
+18.212.220.17
+3.91.227.196
+
+[file_servers]
+18.212.28.160

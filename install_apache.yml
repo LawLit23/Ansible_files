@@ -9,6 +9,7 @@
           - libapache2-mod-php
         state: present
         update_cache: yes
+      when: ansible_distribution == "Ubuntu"
 
     - name: Installing Apache & PHP support and updating cache for Red-Hat servers
       yum:
@@ -17,3 +18,4 @@
           - php
         state: present
         update_cache: yes
+      when: ansible_distribution == "Red-Hat"
