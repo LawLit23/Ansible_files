@@ -6,7 +6,7 @@
 [db_servers]
 44.203.3.60
 18.212.220.17
-3.91.227.196
+3.91.227.196 ansible_user=ec2-user
 
 [file_servers]
-18.212.28.160
+18.212.28.160 ansible_user=ec2-user
