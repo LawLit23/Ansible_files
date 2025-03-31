@@ -19,16 +19,43 @@
 - hosts: web_servers
   become: true
   tasks:
+    - name: Stop Apache service
+      ansible.builtin.systemd:
+        name: apache2
+        state: stopped
+        enabled: no
+      when: ansible_os_family == "Debian"
+
+    - name: Uninstall Apache and remove configuration files
+      ansible.builtin.apt:
+        name: apache2
+        state: absent
+        purge: yes
+        autoremove: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Stop Apache service
+      ansible.builtin.systemd:
+        name: httpd
+        state: stopped
+        enabled: no
+      when: ansible_os_family == "RedHat"
+
+    - name: Uninstall Apache and remove configuration files
+      ansible.builtin.yum:
+        name: httpd
+        state: absent
+        remove_dependencies: yes
+      when: ansible_os_family == "RedHat"
+
     - name: Installing nginx & PHP support for Ubuntu servers
       tags: nginx, php, Ubuntu
       apt:
         name:
           - nginx
-          - php5-common
-          - php5-cli
-          - php5-fpm
+          - php
         state: present
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_os_family == "Ubuntu"
 
     - name: Installing nginx & PHP support for Red-Hat servers
       tags: nginx, redhat
@@ -36,8 +63,9 @@
         name:
           - nginx
           - php
+          - php-fpm
         state: present
-      when: ansible_distribution == "RedHat"
+      when: ansible_os_family == "RedHat"
 
     - name: Starting Nginx servive
       ansible.builtin.systemd:
@@ -55,14 +83,14 @@
           - mariadb
           - mariadb-server
         state: latest
-      when: ansible_distribution == "RedHat"
+      when: ansible_os_family == "RedHat"
 
     - name: Install MariaDB package "Ubuntu"
       tags: ubuntu, db, mariadb
       apt:
         name: mariadb-server
         state: latest
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_os_family == "Ubuntu"
 
 - hosts: file_servers
   become: true
