@@ -39,6 +39,12 @@
         state: present
       when: ansible_distribution == "RedHat"
 
+    - name: Starting Nginx servive
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
 - hosts: db_servers
   become: true
   tasks:
