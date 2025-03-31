@@ -19,34 +19,34 @@
 - hosts: web_servers
   become: true
   tasks:
-    - name: Stop Apache service
-      ansible.builtin.systemd:
-        name: apache2
-        state: stopped
-        enabled: no
-      when: ansible_os_family == "Debian"
+    # - name: Stop Apache service
+    #   ansible.builtin.systemd:
+    #     name: apache2
+    #     state: stopped
+    #     enabled: no
+    #   when: ansible_os_family == "Debian"
 
-    - name: Uninstall Apache and remove configuration files
-      ansible.builtin.apt:
-        name: apache2
-        state: absent
-        purge: yes
-        autoremove: yes
-      when: ansible_os_family == "Debian"
+    # - name: Uninstall Apache and remove configuration files
+    #   ansible.builtin.apt:
+    #     name: apache2
+    #     state: absent
+    #     purge: yes
+    #     autoremove: yes
+    #   when: ansible_os_family == "Debian"
 
-    - name: Stop Apache service
-      ansible.builtin.systemd:
-        name: httpd
-        state: stopped
-        enabled: no
-      when: ansible_os_family == "RedHat"
+    # - name: Stop Apache service
+    #   ansible.builtin.systemd:
+    #     name: httpd
+    #     state: stopped
+    #     enabled: no
+    #   when: ansible_os_family == "RedHat"
 
-    - name: Uninstall Apache and remove configuration files
-      ansible.builtin.yum:
-        name: httpd
-        state: absent
-        remove_dependencies: yes
-      when: ansible_os_family == "RedHat"
+    # - name: Uninstall Apache and remove configuration files
+    #   ansible.builtin.yum:
+    #     name: httpd
+    #     state: absent
+    #     remove_dependencies: yes
+    #   when: ansible_os_family == "RedHat"
 
     - name: Installing nginx & PHP support for Ubuntu servers
       tags: nginx, php, Ubuntu
