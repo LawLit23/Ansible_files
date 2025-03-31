@@ -19,20 +19,22 @@
 - hosts: web_servers
   become: true
   tasks:
-    - name: Installing Apache & PHP support for Ubuntu servers
-      tags: apache, apache2, Ubuntu
+    - name: Installing nginx & PHP support for Ubuntu servers
+      tags: nginx, php, Ubuntu
       apt:
         name:
-          - apache2
-          - libapache2-mod-php
+          - nginx
+          - php5-common
+          - php5-cli
+          - php5-fpm
         state: present
       when: ansible_distribution == "Ubuntu"
 
-    - name: Installing Apache & PHP support for Red-Hat servers
-      tags: apache, redhat, httpd
+    - name: Installing nginx & PHP support for Red-Hat servers
+      tags: nginx, redhat
       yum:
         name:
-          - httpd
+          - nginx
           - php
         state: present
       when: ansible_distribution == "RedHat"
