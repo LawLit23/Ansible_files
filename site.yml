@@ -48,7 +48,7 @@
     #     remove_dependencies: yes
     #   when: ansible_os_family == "RedHat"
 
-    - name: Installing nginx & PHP support for Ubuntu servers
+    - name: Installing nginx & PHP support for Ubuntu Webservers servers
       tags: nginx, php, Ubuntu
       apt:
         name:
@@ -57,7 +57,7 @@
         state: present
       when: ansible_os_family == "Ubuntu"
 
-    - name: Installing nginx & PHP support for Red-Hat servers
+    - name: Installing nginx & PHP support for Red-Hat Webservers servers
       tags: nginx, redhat
       yum:
         name:
@@ -74,7 +74,7 @@
         enabled: yes
 
     - name: Copying default html file for site
-      tags: apache, apache2, httpd
+      tags: nginx
       copy:
         src: default_site.html
         dest: /var/www/html/index.html
