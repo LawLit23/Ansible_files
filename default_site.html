@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,6 +60,22 @@
         .icons i:hover {
             transform: scale(1.2);
         }
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        .photo-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .photo-gallery img:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -75,6 +92,14 @@
         <i class="fab fa-google"></i>
         <i class="fab fa-facebook"></i>
         <i class="fab fa-instagram"></i>
+    </div>
+    
+    <h2>Cool Photos</h2>
+    <div class="photo-gallery">
+        <img src="https://source.unsplash.com/random/300x200?nature" alt="Random Nature">
+        <img src="https://source.unsplash.com/random/300x200?tech" alt="Random Tech">
+        <img src="https://source.unsplash.com/random/300x200?city" alt="Random City">
+        <img src="https://source.unsplash.com/random/300x200?space" alt="Random Space">
     </div>
 </body>
 </html>
