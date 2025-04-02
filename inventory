@@ -10,3 +10,6 @@
 [file_servers]
 18.205.150.80 ansible_user=ec2-user
 34.230.88.183
+
+[master_servers]
+127.0.0.1

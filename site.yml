@@ -2,110 +2,110 @@
 - hosts: all
   become: true
   pre_tasks:
-    - name: Install updates (RHEL)
+    - name: Updating cache only for (Debian)
+      tags: always
+      apt:
+        update_cache: yes
+      changed_when: false
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Updating cache only for (RHEL)
       tags: always
       dnf:
         name: "*"
         state: latest
         update_cache: yes
-      when: ansible_distribution == "RedHat"
+      changed_when: false
+      when: ansible_facts['os_family'] == "RedHat"
 
-    - name: install updates (Ubuntu)
-      apt:
-        upgrade: dist
-        update_cache: yes
-      when: ansible_distribution == "Ubuntu"
+    - name: Adding SSH keys to law_devops
+      tags: always
+      authorized_key:
+        user: law_devops
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINznZM1M924Hxdwfb3JL+D6ccm50MVa1TxCKk0MeH5lJ dalaw_dev_key"
 
 - hosts: web_servers
   become: true
   tasks:
-    # - name: Stop Apache service
-    #   ansible.builtin.systemd:
-    #     name: apache2
-    #     state: stopped
-    #     enabled: no
-    #   when: ansible_os_family == "Debian"
-
-    # - name: Uninstall Apache and remove configuration files
-    #   ansible.builtin.apt:
-    #     name: apache2
-    #     state: absent
-    #     purge: yes
-    #     autoremove: yes
-    #   when: ansible_os_family == "Debian"
-
-    # - name: Stop Apache service
-    #   ansible.builtin.systemd:
-    #     name: httpd
-    #     state: stopped
-    #     enabled: no
-    #   when: ansible_os_family == "RedHat"
-
-    # - name: Uninstall Apache and remove configuration files
-    #   ansible.builtin.yum:
-    #     name: httpd
-    #     state: absent
-    #     remove_dependencies: yes
-    #   when: ansible_os_family == "RedHat"
-
-    - name: Installing nginx & PHP support for Ubuntu Webservers servers
-      tags: nginx, php, Ubuntu
+    - name: Uninstall Apache (Debian)
       apt:
-        name:
-          - nginx
-          - php
-        state: present
-      when: ansible_os_family == "Ubuntu"
+        name: apache2
+        state: absent
+        purge: yes
+        autoremove: yes
+      when: ansible_facts['os_family'] == "Debian"
 
-    - name: Installing nginx & PHP support for Red-Hat Webservers servers
-      tags: nginx, redhat
-      yum:
-        name:
-          - nginx
-          - php
-          - php-fpm
-        state: present
-      when: ansible_os_family == "RedHat"
+    - name: Stop and disable Apache (RHEL)
+      ansible.builtin.service:
+        name: httpd
+        state: stopped
+        enabled: no
+      when: ansible_facts['os_family'] == "RedHat"
 
-    - name: Starting Nginx servive
-      ansible.builtin.systemd:
+    - name: Uninstall Apache (RHEL)
+      dnf:
+        name: httpd
+        state: absent
+        autoremove: yes
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install Nginx (all OS)
+      tags: nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      ansible.builtin.service:
         name: nginx
         state: started
         enabled: yes
 
-    - name: Copying default html file for site
+    - name: Deploy default site HTML
       tags: nginx
       copy:
         src: default_site.html
         dest: /var/www/html/index.html
         owner: root
         group: root
-        mode: 0644
+        mode: "0644"
 
 - hosts: db_servers
   become: true
   tasks:
-    - name: Install MariaDB package "RHEL"
+    - name: Install MariaDB (Debian)
+      tags: ubuntu, db, mariadb
+      apt:
+        name: mariadb-server
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install MariaDB (RHEL)
       tags: redhat, db, mariadb
       dnf:
         name:
           - mariadb
           - mariadb-server
-        state: latest
-      when: ansible_os_family == "RedHat"
-
-    - name: Install MariaDB package "Ubuntu"
-      tags: ubuntu, db, mariadb
-      apt:
-        name: mariadb-server
-        state: latest
-      when: ansible_os_family == "Ubuntu"
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
 
 - hosts: file_servers
   become: true
   tasks:
-    - name: Install Samba package
+    - name: Install Samba
       tags: samba
       package:
         name: samba
-        state: latest
+        state: present
+
+- hosts: master_servers
+  become: true
+  tasks:
+    - name: Install Terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip
+        dest: /usr/local/bin/
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root

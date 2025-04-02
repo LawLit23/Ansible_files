@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+    - name: Install updates (Debian)
+      tags: always
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Inst all updates (RHEL)
+      tags: always
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      when: ansible_facts['os_family'] == "RedHat"
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Creating user law_devops
+      tags: always
+      user:
+        name: law_devops
+        group: root
+
+    - name: Adding SSH keys to law_devops
+      tags: always
+      authorized_key:
+        user: law_devops
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINznZM1M924Hxdwfb3JL+D6ccm50MVa1TxCKk0MeH5lJ dalaw_dev_key"
+    - name: Adding SUDOers file for law_devops
+      copy:
+        src: sudoer_law_devops
+        dest: /etc/sudoers.d/law_devops
+        owner: root
+        group: root
+        mode: 0440
