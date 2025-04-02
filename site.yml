@@ -18,94 +18,27 @@
       changed_when: false
       when: ansible_facts['os_family'] == "RedHat"
 
-    - name: Adding SSH keys to law_devops
-      tags: always
-      authorized_key:
-        user: law_devops
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINznZM1M924Hxdwfb3JL+D6ccm50MVa1TxCKk0MeH5lJ dalaw_dev_key"
-
-- hosts: web_servers
+- hosts: all
   become: true
-  tasks:
-    - name: Uninstall Apache (Debian)
-      apt:
-        name: apache2
-        state: absent
-        purge: yes
-        autoremove: yes
-      when: ansible_facts['os_family'] == "Debian"
-
-    - name: Stop and disable Apache (RHEL)
-      ansible.builtin.service:
-        name: httpd
-        state: stopped
-        enabled: no
-      when: ansible_facts['os_family'] == "RedHat"
-
-    - name: Uninstall Apache (RHEL)
-      dnf:
-        name: httpd
-        state: absent
-        autoremove: yes
-      when: ansible_facts['os_family'] == "RedHat"
-
-    - name: Install Nginx (all OS)
-      tags: nginx
-      package:
-        name: nginx
-        state: present
-
-    - name: Start and enable Nginx
-      ansible.builtin.service:
-        name: nginx
-        state: started
-        enabled: yes
-
-    - name: Deploy default site HTML
-      tags: nginx
-      copy:
-        src: default_site.html
-        dest: /var/www/html/index.html
-        owner: root
-        group: root
-        mode: "0644"
-
-- hosts: db_servers
-  become: true
-  tasks:
-    - name: Install MariaDB (Debian)
-      tags: ubuntu, db, mariadb
-      apt:
-        name: mariadb-server
-        state: present
-      when: ansible_facts['os_family'] == "Debian"
-
-    - name: Install MariaDB (RHEL)
-      tags: redhat, db, mariadb
-      dnf:
-        name:
-          - mariadb
-          - mariadb-server
-        state: present
-      when: ansible_facts['os_family'] == "RedHat"
-
-- hosts: file_servers
-  become: true
-  tasks:
-    - name: Install Samba
-      tags: samba
-      package:
-        name: samba
-        state: present
+  roles:
+    - base
 
 - hosts: master_servers
   become: true
-  tasks:
-    - name: Install Terraform
-      unarchive:
-        src: https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_linux_amd64.zip
-        dest: /usr/local/bin/
-        remote_src: yes
-        mode: 0755
-        owner: root
-        group: root
+  roles:
+    - master_servers
+
+- hosts: web_servers
+  become: true
+  roles:
+    - web_servers
+
+- hosts: db_servers
+  become: true
+  roles:
+    - db_servers
+
+- hosts: file_servers
+  become: true
+  roles:
+    - file_servers

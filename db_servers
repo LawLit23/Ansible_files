@@ -1,0 +1,15 @@
+- name: Install MariaDB (Debian)
+  tags: ubuntu, db, mariadb
+  apt:
+    name: mariadb-server
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Install MariaDB (RHEL)
+  tags: redhat, db, mariadb
+  dnf:
+    name:
+      - mariadb
+      - mariadb-server
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"

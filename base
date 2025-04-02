@@ -1,0 +1,4 @@
+- name: Adding SSH keys to law_devops
+  authorized_key:
+    user: law_devops
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINznZM1M924Hxdwfb3JL+D6ccm50MVa1TxCKk0MeH5lJ dalaw_dev_key"

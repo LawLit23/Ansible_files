@@ -1,0 +1,42 @@
+- name: Uninstall Apache (Debian)
+  apt:
+    name: apache2
+    state: absent
+    purge: yes
+    autoremove: yes
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Stop and disable Apache (RHEL)
+  ansible.builtin.service:
+    name: httpd
+    state: stopped
+    enabled: no
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Uninstall Apache (RHEL)
+  dnf:
+    name: httpd
+    state: absent
+    autoremove: yes
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Install Nginx (all OS)
+  tags: nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Start and enable Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Deploy default site HTML
+  tags: nginx
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
