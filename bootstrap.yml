@@ -33,7 +33,7 @@
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINznZM1M924Hxdwfb3JL+D6ccm50MVa1TxCKk0MeH5lJ dalaw_dev_key"
     - name: Adding SUDOers file for law_devops
       copy:
-        src: sudoer_law_devops
+        src: sudoers_law_devops
         dest: /etc/sudoers.d/law_devops
         owner: root
         group: root
